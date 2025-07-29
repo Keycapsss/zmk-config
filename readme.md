@@ -10,4 +10,8 @@ Download Fimrware on the [release site](https://github.com/Keycapsss/zmk-config/
 ### Forager
 - Default keymap
 - ZMK Studio enabled
-- [keycapsss.com](https://keycapsss.com)
+- Kit available at [keycapsss.com](https://keycapsss.com)
+
+### Prospector (ZMK Dongle)
+- Dongle Firmware ([janpfischer](https://github.com/janpfischer/zmk-dongle-screen)) for the Forager
+- Forager Firmware that works with the Prospector

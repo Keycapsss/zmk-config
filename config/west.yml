@@ -8,6 +8,8 @@ manifest:
       url-base: https://github.com/carrefinho
     - name: caksoylar
       url-base: https://github.com/caksoylar
+    - name: janpfischer
+      url-base: https://github.com/janpfischer
     # Additional modules containing boards/shields/custom code can be listed here as well
     # See https://docs.zephyrproject.org/3.2.0/develop/west/manifest.html#projects
   projects:
@@ -23,6 +25,9 @@ manifest:
       revision: studio
     - name: zmk-rgbled-widget
       remote: caksoylar
+      revision: main
+    - name: zmk-dongle-screen
+      remote: janpfischer
       revision: main
   self:
     path: config
