@@ -22,7 +22,7 @@ manifest:
       revision: main
     - name: forager-zmk-module
       remote: carrefinho
-      revision: studio
+      revision: main
     - name: zmk-rgbled-widget
       remote: caksoylar
       revision: main
