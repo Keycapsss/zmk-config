@@ -1,4 +1,4 @@
-name: Build ZMK firmware
+name: Build ZMK firmware for Forager with Prospector dongle
 on: [workflow_dispatch]
 
 jobs:
