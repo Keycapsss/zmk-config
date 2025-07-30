@@ -28,5 +28,5 @@ include:
     cmake-args: -DCONFIG_ZMK_SPLIT=y -DCONFIG_ZMK_SPLIT_ROLE_CENTRAL=n
     artifact-name: forager-dongle-right
   - board: seeeduino_xiao_ble
-    shield: forager_dongle dongle_screen
+    shield: dongle_screen
     artifact-name: forager-dongle-screen
