@@ -1,4 +1,4 @@
-name: Build ZMK firmware
+name: Build ZMK firmware for Blank Slate
 on: [workflow_dispatch]
 
 jobs:

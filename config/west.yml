@@ -4,12 +4,6 @@ manifest:
       url-base: https://github.com/zmkfirmware
     - name: petejohanson
       url-base: https://github.com/petejohanson
-    - name: carrefinho
-      url-base: https://github.com/carrefinho
-    - name: caksoylar
-      url-base: https://github.com/caksoylar
-    - name: janpfischer
-      url-base: https://github.com/janpfischer
     # Additional modules containing boards/shields/custom code can be listed here as well
     # See https://docs.zephyrproject.org/3.2.0/develop/west/manifest.html#projects
   projects:
@@ -19,15 +13,6 @@ manifest:
       import: app/west.yml
     - name: blank-slate-zmk-module
       remote: petejohanson
-      revision: main
-    - name: forager-zmk-module
-      remote: carrefinho
-      revision: main
-    - name: zmk-rgbled-widget
-      remote: caksoylar
-      revision: main
-    - name: zmk-dongle-screen
-      remote: janpfischer
       revision: main
   self:
     path: config
