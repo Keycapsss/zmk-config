@@ -11,3 +11,7 @@ include:
   - board: lpgalaxy_blank_slate
     snippet: studio-rpc-usb-uart
     artifact-name: blank-slate
+  - board: lpgalaxy_blank_slate
+    snippet: studio-rpc-usb-uart
+    cmake-args: -DZMK_KEYMAP="config/felerius_blank_slate.keymap"
+    artifact-name: felerius_blank_slate

@@ -1,0 +1,10 @@
+# West
+.west/
+zephyr/
+!zephyr/module.yml
+modules/
+tools/
+build/
+*~
+.DS_Store
+.vscode/

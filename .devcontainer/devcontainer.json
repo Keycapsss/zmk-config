@@ -1,0 +1,13 @@
+{
+  "name": "ZMK Build Environment",
+  "image": "zmkfirmware/zmk-build-arm:stable",
+  "customizations": {
+    "vscode": {
+      "extensions": ["ms-vscode.cpptools", "ms-python.python"]
+    }
+  },
+  "workspaceFolder": "/workspaces/zmk-config",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspaces/zmk-config,type=bind",
+  "postCreateCommand": "west zephyr-export",
+  "remoteUser": "root"
+}
