@@ -1,5 +1,10 @@
 # ZMK Firmware
 
+### Quick Start (local)
+1. make code
+2. make my_slate
+3. cp firmware/blank-slate.uf2 /Volumes/YOURBOARD
+
 ### Blank Slate
 - Default keymap
 - [blank-slate-zmk-module](https://github.com/petejohanson/blank-slate-zmk-module)
@@ -14,3 +19,6 @@
    ```bash
    west build -b lpgalaxy_blank_slate -- -DZMK_KEYMAP="config/felerius_blank_slate.keymap"
    ```
+
+## keymap lpgalaxy_blank_slate
+[![keymap-drawer-demo-lpgalaxy_blank_slate](keymap-drawer/lpgalaxy_blank_slate.svg)](https://keycapsss.com/)
