@@ -78,7 +78,7 @@ artifact_name_felerius_blank_slate=/zmk/build/zephyr/zmk.uf2 \
 			       firmware/felerius_blank_slate.uf2
 
 clone_zmk:
-	if [ ! -d zmk.git ]; then git clone https://github.com/zmkfirmware/zmk -b v0.3.0; fi
+	if [ ! -d zmk ]; then git clone https://github.com/zmkfirmware/zmk -b v0.3.0; fi
 
 base: clone_zmk
 	docker run ${docker_opts} sh -c '\
@@ -88,12 +88,13 @@ base: clone_zmk
 ### BASE START
 extra_cmake_args_slate= -DCONFIG_ZMK_SLEEP=y \
 			-DCONFIG_ZMK_IDLE_TIMEOUT=60000 \
-			-DCONFIG_ZMK_IDLE_SLEEP_TIMEOUT=2200000
+			-DCONFIG_ZMK_IDLE_SLEEP_TIMEOUT=2200000 \
+			-DKEYMAP_FILE=/zmk-config/lpgalaxy_blank_slate.keymap
 
 extra_cmake_args_felerius_blank_slate= -DCONFIG_ZMK_SLEEP=y \
 				       -DCONFIG_ZMK_IDLE_TIMEOUT=60000 \
 				       -DCONFIG_ZMK_IDLE_SLEEP_TIMEOUT=2200000 \
-				       -DZMK_KEYMAP=/zmk-config/felerius_blank_slate.keymap \
+				       -DKEYMAP_FILE=/zmk-config/felerius_blank_slate.keymap \
 				       -DEXTRA_CONF_FILE=/zmk-config/felerius_blank_slate.conf
 
 only_slate:
@@ -102,6 +103,7 @@ only_slate:
 		${zmk_studio} \
 		${extra_modules} ${extra_cmake_args_slate} \
 		${keyboard_name_slate}
+	@mkdir -p firmware
 	docker cp ${default}:${artifact_name_slate}
 
 only_felerius_blank_slate:
@@ -110,6 +112,7 @@ only_felerius_blank_slate:
 		${zmk_studio} \
 		${extra_modules} ${extra_cmake_args_felerius_blank_slate} \
 		${keyboard_name_felerius_blank_slate}
+	@mkdir -p firmware
 	docker cp ${default}:${artifact_name_felerius_blank_slate}
 
 my_slate: only_slate \
@@ -127,14 +130,14 @@ flash_slate:
 
 ### CLEAN ###
 clean_firmware:
-	find firmware/*.uf2 -type f -delete
+	rm -f firmware/*.uf2
 
 clean_zmk:
 	if [ -d zmk ]; then rm -rfv zmk; fi
 
 clean: clean_zmk
-	docker ps -aq --filter name='^zmk' | xargs -r docker container rm
-	docker volume list -q --filter name='zmk' | xargs -r docker volume rm
+	-docker ps -aq --filter name='^zmk' | xargs docker container rm 2>/dev/null
+	-docker volume list -q --filter name='zmk' | xargs docker volume rm 2>/dev/null
 
 clean_all: clean clean_firmware
 	@echo "cleaning all"
