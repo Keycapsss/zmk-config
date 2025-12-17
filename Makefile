@@ -93,8 +93,8 @@ extra_cmake_args_slate= -DCONFIG_ZMK_SLEEP=y \
 extra_cmake_args_felerius_blank_slate= -DCONFIG_ZMK_SLEEP=y \
 				       -DCONFIG_ZMK_IDLE_TIMEOUT=60000 \
 				       -DCONFIG_ZMK_IDLE_SLEEP_TIMEOUT=2200000 \
-				       -DZMK_KEYMAP=config/felerius_blank_slate.keymap \
-				       -DEXTRA_CONF_FILE=config/felerius_blank_slate.conf
+				       -DZMK_KEYMAP=/zmk-config/felerius_blank_slate.keymap \
+				       -DEXTRA_CONF_FILE=/zmk-config/felerius_blank_slate.conf
 
 only_slate:
 	docker run --rm ${docker_opts} \
