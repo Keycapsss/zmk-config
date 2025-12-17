@@ -9,3 +9,7 @@ build/
 *~
 .DS_Store
 .vscode/
+
+# Firmware
+firmware/
+*.uf2
