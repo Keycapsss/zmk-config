@@ -1,16 +1,7 @@
-on: [push, pull_request, workflow_dispatch]
+name: Build ZMK firmware
+
+on: [workflow_dispatch]
 
 jobs:
   build:
     uses: zmkfirmware/zmk/.github/workflows/build-user-config.yml@v0.3.0
-
-  draw:
-    uses: caksoylar/keymap-drawer/.github/workflows/draw-zmk.yml@main
-    with:
-      keymap_patterns: |
-        config/felerius_blank_slate.keymap
-        config/lpgalaxy_blank_slate.keymap
-      output_folder: "docs/keymaps"
-      destination: "commit"
-      commit_message: "docs: update keymap SVG renders"
-      draw_args: '--ortho-layout {"split": false, "rows": 4, "columns": 12}'
