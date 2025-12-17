@@ -19,6 +19,3 @@
    ```bash
    west build -b lpgalaxy_blank_slate -- -DZMK_KEYMAP="config/felerius_blank_slate.keymap"
    ```
-
-## keymap lpgalaxy_blank_slate
-[![keymap-drawer-demo-lpgalaxy_blank_slate](keymap-drawer/lpgalaxy_blank_slate.svg)](https://keycapsss.com/)

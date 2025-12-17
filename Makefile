@@ -94,13 +94,13 @@ extra_cmake_args_felerius_blank_slate= -DCONFIG_ZMK_SLEEP=y \
 				       -DCONFIG_ZMK_IDLE_TIMEOUT=60000 \
 				       -DCONFIG_ZMK_IDLE_SLEEP_TIMEOUT=2200000 \
 				       -DZMK_KEYMAP=config/felerius_blank_slate.keymap \
-				       -DEXTRA_CONF_FILE=${PWD}/config/felerius_blank_slate.conf
+				       -DEXTRA_CONF_FILE=config/felerius_blank_slate.conf
 
 only_slate:
 	docker run --rm ${docker_opts} \
 		${west_built_slate} \
 		${zmk_studio} \
-		${extra_modules} \
+		${extra_modules} ${extra_cmake_args_slate} \
 		${keyboard_name_slate}
 	docker cp ${default}:${artifact_name_slate}
 
@@ -108,7 +108,7 @@ only_felerius_blank_slate:
 	docker run --rm ${docker_opts} \
 		${west_built_slate} \
 		${zmk_studio} \
-		${extra_modules} \
+		${extra_modules} ${extra_cmake_args_felerius_blank_slate} \
 		${keyboard_name_felerius_blank_slate}
 	docker cp ${default}:${artifact_name_felerius_blank_slate}
 
