@@ -20,22 +20,15 @@
 #                                         ╚═╩═╝
 
 ### CONFIG ###
-zmk_studio= -S studio-rpc-usb-uart
-extra_modules_dir=${PWD}
-# add a submodule automatic :)
-# git submodule add https://github.com/petejohanson/blank-slate-zmk-module.git module/blank-slate-zmk-module
-extra_modules= -DZMK_EXTRA_MODULES="/boards"
-extra_snippet= /boards/snippets
 config=${PWD}/config
-nice_mount=/Volumes/NICENANO
-puchi_mount=/Volumes/NRF52BOOT
-xiao_mount=/Volumes/XIAO-SENSE
 zmk_image=zmkfirmware/zmk-dev-arm:3.5
-nice=nice_nano_v2
-puchi=puchi_ble_v1
-xiao=seeeduino_xiao_ble
+zmk_studio=-S studio-rpc-usb-uart
+extra_modules=-DZMK_EXTRA_MODULES="/boards"
+extra_modules_dir=${PWD}
 slate=lpgalaxy_blank_slate
 default=zmk-base
+nice_mount=/Volumes/NICENANO
+
 docker_opts= \
 	--interactive \
 	--tty \
@@ -46,100 +39,102 @@ docker_opts= \
 	--volume "${extra_modules_dir}:/boards:Z" \
 	${zmk_image}
 
-### KEYBOARD NAME ###
-keyboard_name_slate= '-DCONFIG_ZMK_KEYBOARD_NAME="SLATE"'
-keyboard_name_felerius_blank_slate= '-DCONFIG_ZMK_KEYBOARD_NAME="F_SLATE"'
+### KEYMAP DRAWER ###
+keymap_drawer_image=python:3.12-slim
+keymap_output_dir=docs/keymaps
+ortho_layout={"split": false, "rows": 4, "columns": 12}
 
-### WEST ###
-west_built_puchi= \
-	    west build /zmk/app \
-	    --pristine --board "${puchi}"
+### BUILD CONFIG ###
+keyboard_name_slate='-DCONFIG_ZMK_KEYBOARD_NAME="SLATE"'
+keyboard_name_felerius='-DCONFIG_ZMK_KEYBOARD_NAME="F_SLATE"'
 
-west_built_nice= \
-	    west build /zmk/app \
-	    --pristine --board "${nice}"
+west_build_slate=west build /zmk/app --pristine --board "${slate}"
 
-west_built_xiao= \
-	    west build /zmk/app \
-	    --pristine --board "${xiao}"
+cmake_args_common=-DCONFIG_ZMK_SLEEP=y \
+	-DCONFIG_ZMK_IDLE_TIMEOUT=60000 \
+	-DCONFIG_ZMK_IDLE_SLEEP_TIMEOUT=2200000
 
-west_built_slate= \
-	    west build /zmk/app \
-	    --pristine --board "${slate}"
+keymap_slate=lpgalaxy_blank_slate
+keymap_felerius=felerius_blank_slate
 
-### SHIELDS ###
-shield_settings_reset= \
-	    -- -DSHIELD="settings_reset" -DZMK_CONFIG="/zmk-config"
+cmake_args_slate=${cmake_args_common} \
+	-DKEYMAP_FILE=/zmk-config/${keymap_slate}.keymap
 
-### ARTIFACT ###
-artifact_name_slate=/zmk/build/zephyr/zmk.uf2 \
-				firmware/blank-slate.uf2
-artifact_name_felerius_blank_slate=/zmk/build/zephyr/zmk.uf2 \
-			       firmware/felerius_blank_slate.uf2
+cmake_args_felerius=${cmake_args_common} \
+	-DKEYMAP_FILE=/zmk-config/${keymap_felerius}.keymap \
+	-DEXTRA_CONF_FILE=/zmk-config/${keymap_felerius}.conf
 
+artifact_slate=/zmk/build/zephyr/zmk.uf2 firmware/${keymap_slate}.uf2
+artifact_felerius=/zmk/build/zephyr/zmk.uf2 firmware/${keymap_felerius}.uf2
+
+### DEFAULT ###
+all: only_default_blank_slate only_felerius_blank_slate
+
+### SETUP ###
 clone_zmk:
-	if [ ! -d zmk ]; then git clone https://github.com/zmkfirmware/zmk -b v0.3.0; fi
+	@if [ ! -d zmk ]; then git clone https://github.com/zmkfirmware/zmk -b v0.3.0; fi
 
 base: clone_zmk
-	docker run ${docker_opts} sh -c '\
-		west init -l /zmk/app/; \
-		west update'
+	docker run ${docker_opts} sh -c 'west init -l /zmk/app/; west update'
 
-### BASE START
-extra_cmake_args_slate= -DCONFIG_ZMK_SLEEP=y \
-			-DCONFIG_ZMK_IDLE_TIMEOUT=60000 \
-			-DCONFIG_ZMK_IDLE_SLEEP_TIMEOUT=2200000 \
-			-DKEYMAP_FILE=/zmk-config/lpgalaxy_blank_slate.keymap
-
-extra_cmake_args_felerius_blank_slate= -DCONFIG_ZMK_SLEEP=y \
-				       -DCONFIG_ZMK_IDLE_TIMEOUT=60000 \
-				       -DCONFIG_ZMK_IDLE_SLEEP_TIMEOUT=2200000 \
-				       -DKEYMAP_FILE=/zmk-config/felerius_blank_slate.keymap \
-				       -DEXTRA_CONF_FILE=/zmk-config/felerius_blank_slate.conf
-
-only_slate:
+### BUILD ###
+only_default_blank_slate: draw_slate
 	docker run --rm ${docker_opts} \
-		${west_built_slate} \
-		${zmk_studio} \
-		${extra_modules} ${extra_cmake_args_slate} \
-		${keyboard_name_slate}
+		${west_build_slate} ${zmk_studio} ${extra_modules} \
+		${cmake_args_slate} ${keyboard_name_slate}
 	@mkdir -p firmware
-	docker cp ${default}:${artifact_name_slate}
+	docker cp ${default}:${artifact_slate}
 
-only_felerius_blank_slate:
+only_felerius_blank_slate: draw_felerius
 	docker run --rm ${docker_opts} \
-		${west_built_slate} \
-		${zmk_studio} \
-		${extra_modules} ${extra_cmake_args_felerius_blank_slate} \
-		${keyboard_name_felerius_blank_slate}
+		${west_build_slate} ${zmk_studio} ${extra_modules} \
+		${cmake_args_felerius} ${keyboard_name_felerius}
 	@mkdir -p firmware
-	docker cp ${default}:${artifact_name_felerius_blank_slate}
+	docker cp ${default}:${artifact_felerius}
 
-my_slate: only_slate \
-	only_felerius_blank_slate
+### KEYMAP SVG ###
+draw_felerius:
+	@mkdir -p ${keymap_output_dir}
+	docker run --rm \
+		-v "${config}:/config:ro" \
+		-v "${PWD}/${keymap_output_dir}:/output" \
+		${keymap_drawer_image} \
+		sh -c 'pip install --quiet keymap-drawer && \
+			keymap parse -z /config/${keymap_felerius}.keymap | \
+			keymap draw --ortho-layout "${ortho_layout}" - -o /output/${keymap_felerius}.svg'
 
-### OPEN A SHELL WITHIN THE ZMK ENVIRONMENT ###
+draw_slate:
+	@mkdir -p ${keymap_output_dir}
+	docker run --rm \
+		-v "${config}:/config:ro" \
+		-v "${PWD}/${keymap_output_dir}:/output" \
+		${keymap_drawer_image} \
+		sh -c 'pip install --quiet keymap-drawer && \
+			keymap parse -z /config/${keymap_slate}.keymap | \
+			keymap draw --ortho-layout "${ortho_layout}" - -o /output/${keymap_slate}.svg'
+
+draw_all: draw_felerius draw_slate
+
+### UTILITIES ###
 shell:
 	docker run --rm ${docker_opts} /bin/bash
 
-### FLASH THE APPROPRIATE FIRMWARE TO THE BOOTLOADER ###
 flash_slate:
-	@ printf "Waiting for ${slate} bootloader to appear at ${nice_mount}.."
-	@ while [ ! -d ${nice_mount} ]; do sleep 1; printf "."; done; printf "\n"
-	cp -av firmware/blank-slate.uf2 ${nice_mount}
+	@printf "Waiting for bootloader at ${nice_mount}.."
+	@while [ ! -d ${nice_mount} ]; do sleep 1; printf "."; done; printf "\n"
+	cp -av firmware/${keymap_slate}.uf2 ${nice_mount}
 
 ### CLEAN ###
 clean_firmware:
 	rm -f firmware/*.uf2
 
 clean_zmk:
-	if [ -d zmk ]; then rm -rfv zmk; fi
+	@if [ -d zmk ]; then rm -rfv zmk; fi
 
-clean: clean_zmk
+clean_docker: clean_zmk
 	-docker ps -aq --filter name='^zmk' | xargs docker container rm 2>/dev/null
 	-docker volume list -q --filter name='zmk' | xargs docker volume rm 2>/dev/null
 
 clean_all: clean clean_firmware
-	@echo "cleaning all"
 
 # vim: set ft=make fdm=marker:

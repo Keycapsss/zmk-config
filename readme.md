@@ -6,6 +6,18 @@
 - ZMK Studio enabled
 - PCB available at [keycapsss.com](https://keycapsss.com/keyboard-parts/pcbs/260/blank-slate-ortholinear-wireless-keyboard-pcb-olkb-planck-case-compatible)
 
+## Keymaps
+
+### Felerius Blank Slate
+<!-- KEYMAP_SVG:felerius_blank_slate:START -->
+![Felerius Blank Slate Keymap](docs/keymaps/felerius_blank_slate.svg)
+<!-- KEYMAP_SVG:felerius_blank_slate:END -->
+
+### LP Galaxy Blank Slate
+<!-- KEYMAP_SVG:lpgalaxy_blank_slate:START -->
+![LP Galaxy Blank Slate Keymap](docs/keymaps/lpgalaxy_blank_slate.svg)
+<!-- KEYMAP_SVG:lpgalaxy_blank_slate:END -->
+
 # How to Use (Local Compilation)
 
 This project uses a `Makefile` to simplify building ZMK firmware locally using Docker. This ensures a consistent environment matching the CI build.
@@ -23,9 +35,10 @@ make base
 ```
 
 ### 2. Build Firmware
-To build the firmware for the **Felerius Blank Slate**:
+
+Build all firmwares and keymap SVGs:
 ```bash
-make only_felerius_blank_slate
+make
 ```
 This command will:
 - Spin up a Docker container.
@@ -33,13 +46,20 @@ This command will:
 - Build the firmware using `west`.
 - Copy the resulting `.uf2` file to the `firmware/` directory.
 
-To build the standard **LP Galaxy Blank Slate**:
+Or build individually:
 ```bash
-make only_slate
+make only_felerius_blank_slate  # Felerius variant
+make only_slate                 # LP Galaxy variant
 ```
 
-### 3. Clean Build Artifacts
-To remove old firmware files and Docker containers/volumes:
+Output: `.uf2` files in `firmware/`, SVGs in `docs/keymaps/`
+
+### 3. Other Commands
 ```bash
-make clean_all
+make draw_all       # Generate keymap SVGs only
+make shell          # Open shell in ZMK container
+make clean_firmware # Remove uf2 files in frimware folder
+make clean_zmk      # Remove zmk folder
+make clean_docker   # Remove docker images and volumes
+make clean_all      # Remove all build artifacts
 ```
