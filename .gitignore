@@ -14,4 +14,3 @@ build/
 firmware/
 *.uf2
 
-docs/keymaps/*
